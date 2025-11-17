@@ -11,9 +11,9 @@ class ConfigService(Generic[ConfigType]):
     @classmethod
     def get_value(cls, key: str, default: Optional[ConfigType] = None) -> ConfigType:
         value: Optional[ConfigType] = cls.config_manager.get(key, default=default)
-        if value is None:
+        if value is None and default is None:
             raise MissingKeyError(missing_key=key, error_code=ErrorCode.MISSING_KEY)
-        return cast(ConfigType, value)
+        return cast(ConfigType, value if value is not None else default)
 
     @classmethod
     def has_value(cls, key: str) -> bool:
