@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: crud-task-manager
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    region: singapore
+    branch: main
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: MONGODB_URI
+        fromDatabase:
+          name: crud-task-manager-db
+          property: connectionString
+      - key: WEB_APP_HOST
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+
+databases:
+  - name: crud-task-manager-db
+    databaseName: taskmanager
+    user: taskmanager
+    plan: starter
+    region: singapore
+

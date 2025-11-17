@@ -19,11 +19,13 @@ from scripts.bootstrap_app import BootstrapApp
 
 load_dotenv()
 
-app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
 # Mount deps
 LoggerManager.mount_logger()
+
+app = Flask(__name__)
+# Get CORS origin from config, default to localhost for development
+web_app_host = ConfigService[str].get_value(key="web_app_host", default="http://localhost:3000")
+cors = CORS(app, resources={r"/*": {"origins": web_app_host}})
 
 # Run bootstrap tasks
 BootstrapApp().run()

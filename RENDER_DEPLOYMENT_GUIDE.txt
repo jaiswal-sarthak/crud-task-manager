@@ -1,0 +1,96 @@
+RENDER.COM DEPLOYMENT GUIDE
+===========================
+
+QUICK SETUP INSTRUCTIONS:
+-------------------------
+
+1. In Render Dashboard, click "New Web Service"
+
+2. Connect your GitHub repository:
+   - Repository: jaiswal-sarthak/crud-task-manager
+   - Branch: main
+
+3. Configure the service:
+   - Name: crud-task-manager
+   - Region: Singapore (or your preferred region)
+   - Branch: main
+   - Root Directory: (leave empty)
+   - Environment: Docker
+   - Dockerfile Path: ./Dockerfile
+   - Docker Context: .
+
+4. Instance Type:
+   - Starter ($7/month) - Recommended for production
+   - Or Free tier for testing (limited features)
+
+5. ENVIRONMENT VARIABLES (Required):
+   Add these in the "Environment Variables" section:
+
+   APP_ENV = production
+   
+   MONGODB_URI = (Get this from MongoDB Atlas or Render Database)
+   - If using Render Database: Use the connection string from the database service
+   - If using MongoDB Atlas: Use your Atlas connection string
+   
+   WEB_APP_HOST = https://crud-task-manager.onrender.com
+   (Update this to your actual Render URL after deployment)
+   
+   NODE_ENV = production
+   
+   PORT = 8080
+
+6. OPTIONAL Environment Variables:
+   These are optional but can be configured if needed:
+   
+   TEMPORAL_SERVER_ADDRESS = (if using Temporal)
+   DATADOG_API_KEY = (if using Datadog)
+   SENDGRID_API_KEY = (if using email)
+   TWILIO_ACCOUNT_SID = (if using SMS)
+   TWILIO_AUTH_TOKEN = (if using SMS)
+
+7. Click "Create Web Service"
+
+8. Render will automatically:
+   - Build your Docker image
+   - Deploy your application
+   - Provide you with a URL like: https://crud-task-manager.onrender.com
+
+MONGODB SETUP:
+-------------
+
+Option 1: Use Render Database (Recommended)
+1. In Render Dashboard, click "New +" → "PostgreSQL" or "MongoDB"
+2. Create a MongoDB database
+3. Copy the connection string
+4. Add it as MONGODB_URI environment variable
+
+Option 2: Use MongoDB Atlas (Free tier available)
+1. Go to https://www.mongodb.com/cloud/atlas
+2. Create a free cluster
+3. Get your connection string
+4. Add it as MONGODB_URI environment variable
+   Format: mongodb+srv://username:password@cluster.mongodb.net/database_name
+
+IMPORTANT NOTES:
+---------------
+
+- After deployment, update WEB_APP_HOST with your actual Render URL
+- The app runs on port 8080 internally (Render handles external routing)
+- CORS is configured to allow requests from WEB_APP_HOST
+- The Dockerfile builds both frontend and backend
+- First deployment may take 5-10 minutes
+
+TROUBLESHOOTING:
+--------------
+
+If deployment fails:
+1. Check build logs in Render dashboard
+2. Ensure MONGODB_URI is set correctly
+3. Verify Dockerfile is in the root directory
+4. Check that all dependencies are in package.json and Pipfile
+
+If app doesn't start:
+1. Check environment variables are set
+2. Verify MongoDB connection string is correct
+3. Check application logs in Render dashboard
+
