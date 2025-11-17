@@ -12,6 +12,7 @@ from modules.task.types import (
     CreateTaskParams,
     DeleteTaskParams,
     GetTaskParams,
+    MarkTaskAsDoneParams,
     Task,
     TaskDeletionResult,
     UpdateTaskParams,
@@ -58,3 +59,18 @@ class TaskWriter:
             raise TaskNotFoundError(task_id=params.task_id)
 
         return TaskDeletionResult(task_id=params.task_id, deleted_at=deletion_time, success=True)
+
+    @staticmethod
+    def mark_task_as_done(*, params: MarkTaskAsDoneParams) -> Task:
+        task = TaskReader.get_task(params=GetTaskParams(account_id=params.account_id, task_id=params.task_id))
+
+        updated_task_bson = TaskRepository.collection().find_one_and_update(
+            {"_id": ObjectId(task.id)},
+            {"$set": {"active": False, "updated_at": datetime.now()}},
+            return_document=ReturnDocument.AFTER,
+        )
+
+        if updated_task_bson is None:
+            raise TaskNotFoundError(task_id=params.task_id)
+
+        return TaskUtil.convert_task_bson_to_task(updated_task_bson)

@@ -1,5 +1,4 @@
 import { createBrowserRouter } from '@datadog/browser-rum-react/react-router-v6';
-import React from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import { useAuthContext } from 'frontend/contexts';

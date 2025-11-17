@@ -11,6 +11,7 @@ class Task:
     account_id: str
     description: str
     title: str
+    active: bool = True
 
 
 @dataclass(frozen=True)
@@ -24,6 +25,7 @@ class GetPaginatedTasksParams:
     account_id: str
     pagination_params: PaginationParams
     sort_params: Optional[SortParams] = None
+    active: Optional[bool] = True
 
 
 @dataclass(frozen=True)
@@ -43,6 +45,12 @@ class UpdateTaskParams:
 
 @dataclass(frozen=True)
 class DeleteTaskParams:
+    account_id: str
+    task_id: str
+
+
+@dataclass(frozen=True)
+class MarkTaskAsDoneParams:
     account_id: str
     task_id: str
 

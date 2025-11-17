@@ -14,6 +14,7 @@ from modules.config.config_service import ConfigService
 from modules.logger.logger import Logger
 from modules.logger.logger_manager import LoggerManager
 from modules.task.rest_api.task_rest_api_server import TaskRestApiServer
+from modules.comment.rest_api.comment_rest_api_server import CommentRestApiServer
 from scripts.bootstrap_app import BootstrapApp
 
 load_dotenv()
@@ -27,16 +28,19 @@ LoggerManager.mount_logger()
 # Run bootstrap tasks
 BootstrapApp().run()
 
-# Connect to Temporal Server
+# Connect to Temporal Server (optional - app will work without it)
 try:
     ApplicationService.connect_temporal_server()
 
     # Start the health check worker
     # In production, it is optional to run this worker
     ApplicationService.schedule_worker_as_cron(cls=HealthCheckWorker, cron_schedule="*/10 * * * *")
+    Logger.info(message="Temporal server connected successfully")
 
 except WorkerClientConnectionError as e:
-    Logger.critical(message=e.message)
+    Logger.warn(message=f"Temporal server not available: {e.message}. Continuing without Temporal features.")
+except Exception as e:
+    Logger.warn(message=f"Temporal initialization failed: {str(e)}. Continuing without Temporal features.")
 
 
 # Apply ProxyFix to interpret `X-Forwarded` headers if enabled in configuration
@@ -58,6 +62,10 @@ api_blueprint.register_blueprint(account_blueprint)
 task_blueprint = TaskRestApiServer.create()
 api_blueprint.register_blueprint(task_blueprint)
 
+# Register comment apis
+comment_blueprint = CommentRestApiServer.create()
+api_blueprint.register_blueprint(comment_blueprint)
+
 app.register_blueprint(api_blueprint)
 
 # Register frontend elements
@@ -68,3 +76,8 @@ app.register_blueprint(react_blueprint)
 @app.errorhandler(AppError)
 def handle_error(exc: AppError) -> ResponseReturnValue:
     return jsonify({"message": exc.message, "code": exc.code}), exc.http_code or 500
+
+
+if __name__ == "__main__":
+    Logger.info(message="Starting Flask development server on http://127.0.0.1:8080")
+    app.run(host="127.0.0.1", port=8080, debug=True)

@@ -12,7 +12,7 @@ class TaskRouter:
         blueprint.add_url_rule(
             "/accounts/<account_id>/tasks/<task_id>",
             view_func=TaskView.as_view("task_view_by_id"),
-            methods=["GET", "PATCH", "DELETE"],
+            methods=["GET", "PATCH", "DELETE", "POST"],
         )
 
         return blueprint

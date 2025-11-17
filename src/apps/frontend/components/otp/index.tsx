@@ -44,7 +44,7 @@ const OTP: React.FC<OTPProps> = ({ error, isLoading, onBlur, onChange }) => {
     { key }: React.KeyboardEvent<HTMLInputElement>,
     index: number,
   ) => {
-    if (key === KeyboardKeys.BACKSPACE.toString()) {
+    if (key === KeyboardKeys.BACKSPACE) {
       inputRef.current[index - 1]?.focus();
     }
   };

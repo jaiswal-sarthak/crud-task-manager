@@ -1,6 +1,5 @@
 import React from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 
 import LoginForm from './login-form';
 
@@ -11,9 +10,10 @@ import AuthenticationPageLayout from 'frontend/pages/authentication/authenticati
 import { AsyncError } from 'frontend/types';
 
 export const Login: React.FC = () => {
-  const navigate = useNavigate();
   const onSuccess = () => {
-    navigate(routes.DASHBOARD);
+    // Use window.location for a hard redirect to ensure route system updates
+    // This ensures the AppRoutes component properly switches to protected routes
+    window.location.href = routes.DASHBOARD;
   };
 
   const onError = (error: AsyncError) => {

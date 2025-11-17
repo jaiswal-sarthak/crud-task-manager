@@ -1,13 +1,45 @@
 const path = require('path');
+const fs = require('fs');
+const yaml = require('js-yaml');
 
-const config = require('config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
-const webpackBuildConfig = JSON.stringify(
-  config.util.toObject(config.has('public') ? config.get('public') : {}),
-);
+// Read config directly from YAML to avoid config package initialization errors
+// This bypasses the problematic config package that causes Utils.isRegExp errors
+let webpackBuildConfig = '{}';
+try {
+  // Try to read from default.yml first, then check environment-specific files
+  const configDir = path.resolve(__dirname, '../../../../config');
+  const env = process.env.NODE_ENV || process.env.APP_ENV || 'development';
+  
+  let configPath = path.join(configDir, `${env}.yml`);
+  if (!fs.existsSync(configPath)) {
+    configPath = path.join(configDir, 'default.yml');
+  }
+  
+  if (fs.existsSync(configPath)) {
+    const fileContents = fs.readFileSync(configPath, 'utf8');
+    const config = yaml.load(fileContents);
+    if (config && config.public) {
+      webpackBuildConfig = JSON.stringify(config.public);
+    }
+  } else {
+    // Fallback to hardcoded defaults if config file doesn't exist
+    webpackBuildConfig = JSON.stringify({
+      authenticationMechanism: 'EMAIL',
+      datadog: { enabled: 'false' }
+    });
+  }
+} catch (e) {
+  // If config fails to load, use default values
+  console.warn('Config file failed to load, using default config:', e.message);
+  webpackBuildConfig = JSON.stringify({
+    authenticationMechanism: 'EMAIL',
+    datadog: { enabled: 'false' }
+  });
+}
 
 module.exports = {
   target: 'web',

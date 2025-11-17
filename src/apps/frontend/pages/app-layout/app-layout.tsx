@@ -15,7 +15,16 @@ export const AppLayout: React.FC<PropsWithChildren> = ({ children }) => {
           setIsSidebarOpen={setIsSidebarOpen}
         />
 
-        <div className="relative flex flex-1 flex-col">
+        {/* Mobile Overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-9998 bg-black/50 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        <div className="relative flex flex-1 flex-col overflow-hidden">
           {/* Header */}
           <Header
             isSidebarOpen={isSidebarOpen}
@@ -23,7 +32,7 @@ export const AppLayout: React.FC<PropsWithChildren> = ({ children }) => {
           />
 
           {/* Main Content */}
-          <main>{children}</main>
+          <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
       </div>
     </div>

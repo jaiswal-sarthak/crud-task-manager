@@ -1,0 +1,119 @@
+VIDEO WALKTHROUGH SCRIPT - TASK MANAGEMENT APPLICATION
+=======================================================
+
+INTRODUCTION
+-----------
+"Today I'll walk you through our task management application built with Flask backend and React frontend. This is a full-stack application with features for creating, managing, and tracking tasks."
+
+PROJECT STRUCTURE OVERVIEW
+--------------------------
+"The project is organized into two main parts: backend and frontend, both located in the src/apps directory."
+
+BACKEND STRUCTURE (Python/Flask)
+--------------------------------
+"Let's start with the backend, located in src/apps/backend."
+
+"First, the server entry point - server.py. This is where the Flask application starts."
+
+"The core business logic is in the modules folder. We have a task module that handles all task-related operations."
+
+"Inside modules/task, we have:
+- types.py - defines all data structures and parameters
+- task_service.py - the service layer that orchestrates operations
+- rest_api/task_view.py - the API endpoints for HTTP requests
+- rest_api/task_router.py - routes configuration
+- internal/task_reader.py - reads tasks from database
+- internal/task_writer.py - writes tasks to database
+- internal/task_util.py - utility functions for data conversion"
+
+"The key feature we added is the active parameter. Tasks can be active (true) or completed (false). When you mark a task as done, we set active to false instead of deleting it."
+
+"In task_reader.py, you can see we filter tasks by the active parameter. The get_paginated_tasks method accepts an active parameter to filter results."
+
+"In task_writer.py, we have the mark_task_as_done method that sets active to false when a task is completed."
+
+"The API endpoint in task_view.py supports querying with ?active=true or ?active=false to get active or completed tasks separately."
+
+FRONTEND STRUCTURE (React/TypeScript)
+-------------------------------------
+"Now let's look at the frontend, located in src/apps/frontend."
+
+"Pages folder contains our main views:
+- dashboard/index.tsx - shows task statistics and recent tasks
+- tasks/index.tsx - displays all active tasks with create, edit, delete, and mark as done
+- completed-tasks/index.tsx - shows all completed tasks"
+
+"Components folder has reusable UI components:
+- task-card/index.tsx - displays individual task cards with status indicators
+- sidebar/index.tsx - navigation menu
+- task-form-modal/index.tsx - modal for creating/editing tasks"
+
+"Services folder contains API clients:
+- task.service.ts - handles all API calls to the backend, including the new markTaskAsDone method"
+
+"Types folder defines TypeScript interfaces:
+- task.ts - Task interface now includes the active field"
+
+KEY FEATURES IMPLEMENTED
+-----------------------
+"Let me show you the key features we implemented:"
+
+"1. Task Management:
+   - Create new tasks with title and description
+   - Edit existing tasks
+   - Delete tasks
+   - Mark tasks as done (sets active to false)"
+
+"2. Completed Tasks Page:
+   - Separate page showing all completed tasks
+   - Search and sort functionality
+   - Can permanently delete completed tasks"
+
+"3. Dashboard:
+   - Shows total tasks, active tasks, and completed tasks count
+   - Progress bars showing active vs completed percentages
+   - Completion rate calculation
+   - Recent tasks preview"
+
+"4. Task Cards:
+   - Visual status indicators (Active with pulsing dot, Completed with green dot)
+   - Mark as Done button for active tasks
+   - Edit and Delete buttons
+   - Different styling for completed tasks"
+
+"5. Sidebar Navigation:
+   - Dashboard icon
+   - Tasks icon
+   - Completed Tasks icon (star/badge icon)"
+
+HOW IT WORKS
+-----------
+"When you create a task, it's saved with active=true by default."
+
+"When you click 'Mark as Done', it calls the markTaskAsDone API which sets active=false."
+
+"The tasks page filters for active=true tasks, while the completed tasks page filters for active=false."
+
+"The dashboard loads both counts to show statistics and progress."
+
+ROUTING
+-------
+"Routes are defined in routes/protected.tsx:
+- / - Dashboard
+- /tasks - Active tasks page
+- /tasks/completed - Completed tasks page"
+
+STYLING
+-------
+"We use Tailwind CSS for styling. The tailwind.config.js file includes custom animations like fadeIn for smooth card appearances."
+
+ASSETS
+------
+"Icons are stored in src/assets/img/icon. We use inline SVGs in the sidebar for better performance and theming support."
+
+CONCLUSION
+----------
+"This application demonstrates a complete CRUD system with status tracking. The active flag pattern allows us to soft-delete tasks and maintain a history of completed work."
+
+"The codebase follows a clean architecture with separation of concerns - API layer, service layer, and data access layer in the backend, and component-based architecture in the frontend."
+

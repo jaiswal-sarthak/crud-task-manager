@@ -10,14 +10,15 @@ interface ButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type?: ButtonType;
   kind?: ButtonKind;
+  className?: string;
 }
 
 const ButtonClasses: Record<ButtonKind, string> = {
   [ButtonKind.PRIMARY]:
-    'flex w-full items-center justify-center rounded-lg border bg-primary p-4 font-medium text-white transition active:bg-primary/80',
+    'flex w-full items-center justify-center rounded-lg border bg-primary px-4 py-3 text-sm font-medium text-white transition active:bg-primary/80 sm:py-4 sm:text-base',
   [ButtonKind.SECONDARY]: 'inset-y-0 flex items-center',
   [ButtonKind.TERTIARY]:
-    'bg-transparent text-center text-lg text-primary active:bg-transparent',
+    'bg-transparent text-center text-base text-primary active:bg-transparent sm:text-lg',
 };
 
 const DisabledClasses: Record<ButtonKind, string> = {
@@ -39,11 +40,13 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
   type = ButtonType.BUTTON,
   kind = ButtonKind.PRIMARY,
+  className,
 }) => (
   <button
     className={clsx(
       ButtonClasses[kind],
       disabled || isLoading ? DisabledClasses[kind] : EnabledClasses[kind],
+      className,
     )}
     disabled={disabled || isLoading}
     type={type}

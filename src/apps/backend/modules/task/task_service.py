@@ -6,6 +6,7 @@ from modules.task.types import (
     DeleteTaskParams,
     GetPaginatedTasksParams,
     GetTaskParams,
+    MarkTaskAsDoneParams,
     Task,
     TaskDeletionResult,
     UpdateTaskParams,
@@ -32,3 +33,7 @@ class TaskService:
     @staticmethod
     def delete_task(*, params: DeleteTaskParams) -> TaskDeletionResult:
         return TaskWriter.delete_task(params=params)
+
+    @staticmethod
+    def mark_task_as_done(*, params: MarkTaskAsDoneParams) -> Task:
+        return TaskWriter.mark_task_as_done(params=params)

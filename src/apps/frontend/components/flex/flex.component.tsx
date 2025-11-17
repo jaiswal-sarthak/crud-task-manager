@@ -9,6 +9,7 @@ interface FlexProps {
   flexWrap?: keyof typeof styles.flexWrap;
   gap?: keyof typeof styles.gap;
   justifyContent?: keyof typeof styles.justifyContent;
+  className?: string;
 }
 
 const Flex: React.FC<PropsWithChildren<FlexProps>> = ({
@@ -18,6 +19,7 @@ const Flex: React.FC<PropsWithChildren<FlexProps>> = ({
   flexWrap = 'nowrap',
   gap = 0,
   justifyContent = 'start',
+  className,
 }) => (
   <div
     className={clsx([
@@ -27,6 +29,7 @@ const Flex: React.FC<PropsWithChildren<FlexProps>> = ({
       styles.alignItems[alignItems],
       styles.flexWrap[flexWrap],
       styles.gap[gap],
+      className,
     ])}
   >
     {children}

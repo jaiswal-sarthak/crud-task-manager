@@ -20,7 +20,8 @@ export const OTPVerificationPage: React.FC = () => {
   const navigate = useNavigate();
 
   const onVerifyOTPSuccess = () => {
-    navigate(routes.DASHBOARD);
+    // Use window.location for a hard redirect to ensure route system updates
+    window.location.href = routes.DASHBOARD;
   };
 
   const onResendOTPSuccess = () => {

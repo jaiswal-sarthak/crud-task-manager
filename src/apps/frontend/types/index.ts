@@ -10,15 +10,20 @@ import { AccessToken, KeyboardKeys, PhoneNumber } from 'frontend/types/auth';
 import { ApiResponse, ApiError } from 'frontend/types/service-response';
 import { UserMenuDropdownItem } from 'frontend/types/user-menu-dropdown-item';
 
+// Export classes and enums as values (not type-only) since they're used at runtime
 export {
   AccessToken,
   Account,
   ApiError,
   ApiResponse,
-  AsyncError,
-  AsyncResult,
   KeyboardKeys,
   PhoneNumber,
+};
+
+// Export types as type-only
+export type {
+  AsyncError,
+  AsyncResult,
   UseAsyncResponse,
   DatadogUser,
   UserMenuDropdownItem,

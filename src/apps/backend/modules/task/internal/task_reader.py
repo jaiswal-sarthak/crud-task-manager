@@ -20,7 +20,9 @@ class TaskReader:
 
     @staticmethod
     def get_paginated_tasks(*, params: GetPaginatedTasksParams) -> PaginationResult[Task]:
-        filter_query = {"account_id": params.account_id, "active": True}
+        filter_query = {"account_id": params.account_id}
+        if params.active is not None:
+            filter_query["active"] = params.active
         total_count = TaskRepository.collection().count_documents(filter_query)
         pagination_params, skip, total_pages = BaseModel.calculate_pagination_values(
             params.pagination_params, total_count

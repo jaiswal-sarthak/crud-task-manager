@@ -28,8 +28,8 @@ const Input: React.FC<InputProps> = ({
 }) => (
   <div
     className={clsx(
-      'w-full rounded-lg border bg-white p-4 outline-none focus:border-primary focus-visible:shadow-none',
-      error ? 'border-red-500' : 'border-stroke',
+      'w-full rounded-lg border bg-white p-3 text-sm outline-none focus:border-primary focus-visible:shadow-none dark:bg-boxdark sm:p-4 sm:text-base',
+      error ? 'border-red-500' : 'border-stroke dark:border-strokedark',
     )}
   >
     <HorizontalStackLayout gap={2}>

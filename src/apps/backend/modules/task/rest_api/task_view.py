@@ -15,6 +15,7 @@ from modules.task.types import (
     DeleteTaskParams,
     GetPaginatedTasksParams,
     GetTaskParams,
+    MarkTaskAsDoneParams,
     UpdateTaskParams,
 )
 
@@ -64,8 +65,14 @@ class TaskView(MethodView):
             if size is None:
                 size = DEFAULT_PAGINATION_PARAMS.size
 
+            # Get active parameter from query string (defaults to True for backward compatibility)
+            active_param = request.args.get("active", type=str)
+            active = None
+            if active_param is not None:
+                active = active_param.lower() == "true"
+
             pagination_params = PaginationParams(page=page, size=size, offset=0)
-            tasks_params = GetPaginatedTasksParams(account_id=account_id, pagination_params=pagination_params)
+            tasks_params = GetPaginatedTasksParams(account_id=account_id, pagination_params=pagination_params, active=active)
 
             pagination_result = TaskService.get_paginated_tasks(params=tasks_params)
 
@@ -80,6 +87,14 @@ class TaskView(MethodView):
         if request_data is None:
             raise TaskBadRequestError("Request body is required")
 
+        # Check if this is a mark-as-done request
+        if request_data.get("action") == "mark_as_done":
+            mark_as_done_params = MarkTaskAsDoneParams(account_id=account_id, task_id=task_id)
+            updated_task = TaskService.mark_task_as_done(params=mark_as_done_params)
+            task_dict = asdict(updated_task)
+            return jsonify(task_dict), 200
+
+        # Otherwise, treat as regular update
         if not request_data.get("title"):
             raise TaskBadRequestError("Title is required")
 
